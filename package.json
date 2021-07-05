@@ -1,0 +1,24 @@
+{
+  "name": "node-red-contrib-miakapi",
+  "version": "0.0.1",
+  "description": "MiakAPI V3 for Node-RED",
+  "node-red": {
+    "nodes": {
+      "miakapi": "miakapi.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Miakapp/node-red-contrib-MiakAPI"
+  },
+  "keywords": [
+    "Miakapp",
+    "MiakAPI",
+    "Node-RED"
+  ],
+  "author": "Mathieu Colmon",
+  "license": "ISC",
+  "dependencies": {
+    "miakapi": "^3.0.0-DEV"
+  }
+}

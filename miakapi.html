@@ -63,6 +63,80 @@
   <p>Get list of all Miakapp users in your home</p>
 </script>
 
+<!-- Commit -->
+<script type="text/javascript">
+  RED.nodes.registerType('commit', {
+    category: 'Miakapp',
+    color: '#3ea842',
+    icon: 'miakapp.png',
+    inputs: 1,
+    inputLabels: 'Data',
+    defaults: {
+      name: { value: '' },
+      values: { value: {} },
+    },
+    label() {
+      return this.name || 'Commit variables';
+    },
+    oneditprepare() {
+      $('ol.list').editableList({
+        addButton: true,
+        removable: true,
+        height: 500,
+        addItem(row, index, data) {
+          $(row).html(
+`<div style="display:flex">
+  <input type="text" id="node-input-path${index}" placeholder="Variable (ex: 'group1.var1')" value="${data.path || ''}" required>
+  <div style="align-self: center; padding: 5px;">=</div>
+  <input type="text" id="node-input-value${index}" placeholder="value" required>
+  <input type="hidden" id="node-input-value${index}-type">
+</div>`);
+
+          $(`#node-input-value${index}`).typedInput({
+            default: data.type,
+            types: ['jsonata', 'str', 'env'],
+            typeField: `#node-input-value${index}-type`,
+          });
+
+          $(`#node-input-value${index}`).typedInput('value', data.value || '');
+        },
+      });
+
+      const items = Object.keys(this.values).map((path) => ({ path, ...this.values[path] }))
+      $('ol.list').editableList('addItems', items);
+    },
+
+    oneditsave() {
+      const len = $('ol.list').editableList('items').length;
+      const items = {};
+
+      for (let i = 0; i < len; i += 1) {
+        const path = $(`#node-input-path${i}`).val();
+        const item = $(`#node-input-value${i}`);
+
+        items[path.includes('.') ? path : `global.${path}`] = {
+          type: item.typedInput('type'),
+          value: item.typedInput('value'),
+        };
+      }
+
+      this.values = items;
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="commit">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <ol class="list"></ol>
+</script>
+
+<script type="text/html" data-help-name="commit">
+  <p>Commit new data</p>
+</script>
+
 <!-- Reconnect -->
 <script type="text/javascript">
   RED.nodes.registerType('reconnect', {

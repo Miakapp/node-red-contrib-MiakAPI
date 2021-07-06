@@ -1,7 +1,10 @@
 const Miakapi = require('miakapi');
+const jsonata = require('jsonata');
 
 /** @type {Miakapi.Home} */
 let HOME = null;
+
+const variables = {};
 
 const handlers = {
   ready: [],
@@ -77,11 +80,32 @@ module.exports = (RED) => {
     const node = this;
 
     node.on('input', (msg) => {
-      console.log('CONFIG', config);
-      console.log('MSG', msg);
-      // if (HOME) {
-      //   HOME.commit(msg.variables);
-      // } else node.status({ fill: 'red', shape: 'ring', text: 'Not connected' });
+      Object.keys(config.values).forEach((path) => {
+        const { type, value } = config.values[path];
+
+        if (type === 'jsonata') {
+          variables[path] = jsonata(value).evaluate({
+            msg,
+            flow: node.context().flow,
+            global: node.context().global,
+          });
+
+          return;
+        }
+
+        if (type === 'env') {
+          variables[path] = process.env[value];
+          return;
+        }
+
+        variables[path] = value;
+      });
+
+      if (HOME) {
+        HOME.variables = variables;
+        HOME.commit();
+        node.status({ fill: 'green', shape: 'dot', text: 'Data sent !' });
+      } else node.status({ fill: 'red', shape: 'ring', text: 'Not connected' });
     });
   });
 

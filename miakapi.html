@@ -69,6 +69,7 @@
     category: 'Miakapp',
     color: '#3ea842',
     icon: 'miakapp.png',
+    align: 'right',
     inputs: 1,
     inputLabels: 'Data',
     defaults: {
@@ -267,12 +268,90 @@
   <p>Handles when an user clicks on a button or types text in an input</p>
 </script>
 
+<!-- Send notification -->
+<script type="text/javascript">
+  RED.nodes.registerType('sendNotif', {
+    category: 'Miakapp',
+    color: '#3ea842',
+    icon: 'miakapp.png',
+    align: 'right',
+    inputs: 1,
+    inputLabels: 'Data',
+    defaults: {
+      name: { value: '' },
+      title: { value: '', required: true },
+      body: { value: '', required: true },
+      image: { value: '' },
+      tag: { value: '' },
+
+      adminOnly: { value: false },
+      group: { value: '' },
+    },
+    label() {
+      return this.name || 'Send notification';
+    },
+    oneditprepare() {
+      $('#node-input-title').typedInput({ type: 'jsonata', types: ['jsonata'] });
+      $('#node-input-body').typedInput({ type: 'jsonata', types: ['jsonata'] });
+      $('#node-input-image').typedInput({ type: 'jsonata', types: ['jsonata'] });
+
+      $(`#node-input-group`).on('keyup', function() {
+        $(this).val($(this).val().replace(/[^0-z]/g, '_'));
+      });
+    },
+
+    oneditsave() {
+
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="sendNotif">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+
+  <div>Notification :</div>
+  <div class="form-row">
+    <label for="node-input-title"><i class="fa fa-sticky-note"></i> Title</label>
+    <input type="text" id="node-input-title" placeholder="Notification title">
+  </div>
+  <div class="form-row">
+    <label for="node-input-body"><i class="fa fa-sticky-note"></i> Body</label>
+    <input type="text" id="node-input-body" placeholder="Notification body">
+  </div>
+  <div class="form-row">
+    <label for="node-input-image"><i class="fa fa-sticky-note"></i> Image</label>
+    <input type="text" id="node-input-image" placeholder="Notification image URL (optional)">
+  </div>
+  <div class="form-row">
+    <label for="node-input-tag"><i class="fa fa-sticky-note"></i> Tag</label>
+    <input type="text" id="node-input-tag" placeholder="Notification tag (optional)">
+  </div>
+
+  <div>Conditions :</div>
+  <div class="form-row">
+    <label for="node-input-group"><i class="fa fa-sticky-note"></i> Group</label>
+    <input type="text" id="node-input-group" placeholder="Required group (optional)">
+  </div>
+  <div class="form-row">
+    <input type="checkbox" id="node-input-adminOnly" style="display: inline-block;width: auto;vertical-align: top;">
+    <label for="node-input-adminOnly"> Admins only</label>
+  </div>
+</script>
+
+<script type="text/html" data-help-name="sendNotif">
+  <p>Send a push notification to each user who meets the criteria</p>
+</script>
+
 <!-- Reconnect -->
 <script type="text/javascript">
   RED.nodes.registerType('reconnect', {
     category: 'Miakapp',
     color: '#3ea842',
     icon: 'miakapp.png',
+    align: 'right',
     inputs: 1,
     defaults: {
       name: { value: '' },

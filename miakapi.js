@@ -63,16 +63,22 @@ module.exports = (RED) => {
     const node = this;
 
     node.on('input', (msg) => {
+      const globalContext = {}
+      node.context().global.keys().forEach((k) => globalContext[k] = node.context().global.get(k));
+      const flowContext = {}
+      node.context().flow.keys().forEach((k) => flowContext[k] = node.context().flow.get(k));
+
+      const contexts = {
+        msg,
+        flow: flowContext,
+        global: globalContext,
+      };
+
       Object.keys(config.values).forEach((path) => {
         const { type, value } = config.values[path];
 
         if (type === 'jsonata') {
-          variables[path] = jsonata(value).evaluate({
-            msg,
-            flow: node.context().flow,
-            global: node.context().global,
-          });
-
+          variables[path] = jsonata(value).evaluate(contexts);
           return;
         }
 
@@ -150,6 +156,46 @@ module.exports = (RED) => {
       },
     });
   });
+
+    // Send notification
+    RED.nodes.registerType('sendNotif', function(config) {
+      RED.nodes.createNode(this, config);
+      const node = this;
+
+      const globalContext = {}
+      node.context().global.keys().forEach((k) => globalContext[k] = node.context().global.get(k));
+      const flowContext = {}
+      node.context().flow.keys().forEach((k) => flowContext[k] = node.context().flow.get(k));
+
+      node.on('input', (msg) => {
+        if (HOME) {
+          const contexts = {
+            msg,
+            flow: flowContext,
+            global: globalContext,
+          };
+
+          const notif = {
+            title: jsonata(config.title || '""').evaluate(contexts) || '',
+            body: jsonata(config.body || '""').evaluate(contexts) || '',
+            image: jsonata(config.image || '""').evaluate(contexts) || '',
+            tag: config.tag || '',
+          };
+
+          console.log('notif', notif);
+
+          const users = HOME.users.filter((u) => (
+            u.notifications
+            && (!config.adminOnly || u.isAdmin)
+            && (!config.group || u.groups.includes(config.group))
+          ));
+
+          users.forEach((u) => u.sendPush(notif));
+
+          node.status({ fill: 'green', shape: 'dot', text: `Sent to ${users.length} user${users.length > 1 ? 's' : ''}` });
+        } else node.status({ fill: 'red', shape: 'ring', text: 'Not connected' });
+      });
+    });
 
   // Reconnect
   RED.nodes.registerType('reconnect', function(config) {

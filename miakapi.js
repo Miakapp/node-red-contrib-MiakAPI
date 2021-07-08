@@ -10,7 +10,7 @@ const handlers = {
   ready: [],
   update: [],
   userLogin: [],
-  /** @type {{ handler: () => void, inputID: string }[]} */
+  /** @type {{ handler: (action: Miakapi.UserActionEvent) => void, inputID: string }[]} */
   userAction: [],
 };
 
@@ -20,7 +20,7 @@ module.exports = (RED) => {
     RED.nodes.createNode(this, config);
     const node = this;
 
-    node.status({ fill: 'yellow', shape: 'dot', text: 'Connection...' });
+    node.status({ fill: 'yellow', shape: 'dot', text: 'Connecting...' });
 
     HOME = Miakapi(config.home, config.coordID, config.coordSecret);
 
@@ -31,34 +31,17 @@ module.exports = (RED) => {
 
     HOME.onUpdate((users) => {
       handlers.update.forEach((h) => h(users));
-      // node.status({
-      //   fill: 'green',
-      //   shape: 'dot',
-      //   text: `${users.length} users !`,
-      // });
     });
 
     HOME.onUserLogin((event) => {
       handlers.userLogin.forEach((h) => h(event));
-      // node.status({
-      //   fill: 'green',
-      //   shape: 'dot',
-      //   text: `[${event.type}] ${event.user.displayName}`,
-      // });
     });
 
     HOME.onUserAction((action) => {
       handlers.userAction
         .filter((h) => h.inputID === action.input.id)
         .forEach((h) => h.handler(action));
-      // node.status({
-      //   fill: 'green',
-      //   shape: 'dot',
-      //   text: `[${action.user.displayName}] ${action.type} ${action.input.name || action.input.id}`,
-      // });
     });
-
-    node.status({ fill: 'blue', shape: 'dot', text: 'Already connected' });
   });
 
   // Get users
@@ -109,15 +92,62 @@ module.exports = (RED) => {
     });
   });
 
-  // Is in group
-  RED.nodes.registerType('isInGroup', function(config) {
+  // On update
+  RED.nodes.registerType('onUpdate', function(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
-    node.on('input', (msg) => {
-      if (HOME) {
-        HOME.users.find((id))
-      } else node.status({ fill: 'red', shape: 'ring', text: 'Not connected' });
+    handlers.update.push((users) => {
+      node.send({ users });
+      node.status({
+        fill: 'green',
+        shape: 'dot',
+        text: `${users.length} user${users.length > 1 ? 's' : ''} !`,
+      });
+    });
+  });
+
+  // On user login
+  RED.nodes.registerType('onUserLogin', function(config) {
+    RED.nodes.createNode(this, config);
+    const node = this;
+
+    handlers.userLogin.push((userEvent) => {
+      node.send({ userEvent });
+
+      node.status({
+        fill: 'green',
+        shape: 'dot',
+        text: `[${userEvent.user.displayName}] ${userEvent.type}`,
+      });
+    });
+  });
+
+  // On user action
+  RED.nodes.registerType('onUserAction', function(config) {
+    RED.nodes.createNode(this, config);
+    const node = this;
+
+    handlers.userAction.push({
+      inputID: config.inputID,
+      handler(userAction) {
+        let allowed = false;
+        if (config.allowedGroups && config.allowedGroups.length > 0) {
+          config.allowedGroups.forEach((g) => {
+            if (userAction.user.groups.includes(g)) allowed = true;
+          });
+        } else allowed = true;
+
+        if (allowed) {
+          node.send({ userAction });
+
+          node.status({
+            fill: 'green',
+            shape: 'dot',
+            text: `[${userAction.user.displayName}] ${userAction.type} ${userAction.input.id}`,
+          });
+        }
+      },
     });
   });
 

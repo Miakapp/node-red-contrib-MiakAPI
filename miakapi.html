@@ -79,7 +79,7 @@
       return this.name || 'Commit variables';
     },
     oneditprepare() {
-      $('ol.list').editableList({
+      $('ol#varList').editableList({
         addButton: true,
         removable: true,
         height: 500,
@@ -99,15 +99,23 @@
           });
 
           $(`#node-input-value${index}`).typedInput('value', data.value || '');
+
+          $(`#node-input-path${index}`).on('keyup', function() {
+            $(this).val($(this).val()
+              .replace(/[{}[\] ]/g, '_')
+              .replace(/\.{2,}/g, '.')
+              .replace(/_{2,}/g, '_')
+            );
+          });
         },
       });
 
       const items = Object.keys(this.values).map((path) => ({ path, ...this.values[path] }))
-      $('ol.list').editableList('addItems', items);
+      $('ol#varList').editableList('addItems', items);
     },
 
     oneditsave() {
-      const len = $('ol.list').editableList('items').length;
+      const len = $('ol#varList').editableList('items').length;
       const items = {};
 
       for (let i = 0; i < len; i += 1) {
@@ -130,11 +138,133 @@
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
-  <ol class="list"></ol>
+  <ol id="varList"></ol>
 </script>
 
 <script type="text/html" data-help-name="commit">
-  <p>Commit new data</p>
+  <p>Commit variables to Miakapp</p>
+</script>
+
+<!-- On home update -->
+<script type="text/javascript">
+  RED.nodes.registerType('onUpdate', {
+    category: 'Miakapp',
+    color: '#3ea842',
+    icon: 'miakapp.png',
+    outputs: 1,
+    outputLabels: 'User list',
+    defaults: {
+      name: { value: '' },
+    },
+    label() {
+      return this.name || 'On home update';
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="onUpdate">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="onUpdate">
+  <p>Handles when the home is updated</p>
+</script>
+
+<!-- On user login -->
+<script type="text/javascript">
+  RED.nodes.registerType('onUserLogin', {
+    category: 'Miakapp',
+    color: '#3ea842',
+    icon: 'miakapp.png',
+    outputs: 1,
+    outputLabels: 'User login event',
+    defaults: {
+      name: { value: '' },
+    },
+    label() {
+      return this.name || 'On user login';
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="onUserLogin">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="onUserLogin">
+  <p>Handles when an user connects or disconnects</p>
+</script>
+
+<!-- On user action -->
+<script type="text/javascript">
+  RED.nodes.registerType('onUserAction', {
+    category: 'Miakapp',
+    color: '#3ea842',
+    icon: 'miakapp.png',
+    outputs: 1,
+    outputLabels: 'User action event',
+    defaults: {
+      name: { value: '' },
+      inputID: { value: '' },
+      allowedGroups: { value: [] },
+    },
+    label() {
+      return this.name || 'On user action';
+    },
+    oneditprepare() {
+      $('ol#groupList').editableList({
+        addButton: true,
+        removable: true,
+        height: 500,
+        addItem(row, index, grp) {
+          $(row).html(
+`<input type="text" id="node-input-grp${index}" placeholder="Group ID" value="${grp.name || ''}" required>`
+          );
+
+          $(`#node-input-grp${index}`).on('keyup', function() {
+            $(this).val($(this).val().replace(/[^0-z]/g, '_'));
+          });
+        },
+      });
+
+      $('ol#groupList').editableList('addItems', this.allowedGroups.map((name) => ({ name })));
+    },
+
+    oneditsave() {
+      const len = $('ol#groupList').editableList('items').length;
+      const items = [];
+
+      for (let i = 0; i < len; i += 1) {
+        const grp = $(`#node-input-grp${i}`).val();
+        if (grp) items.push(grp);
+      }
+
+      this.allowedGroups = items;
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="onUserAction">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-inputID"><i class="fa fa-sticky-note"></i> Element ID</label>
+    <input type="text" id="node-input-inputID" placeholder="Input/Button ID (without #)" required>
+  </div>
+  <div>User must match one of the following groups (no filter if empty) :</div>
+  <ol id="groupList"></ol>
+</script>
+
+<script type="text/html" data-help-name="onUserAction">
+  <p>Handles when an user clicks on a button or types text in an input</p>
 </script>
 
 <!-- Reconnect -->

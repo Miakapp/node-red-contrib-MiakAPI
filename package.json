@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-miakapi",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "MiakAPI V3 for Node-RED",
   "node-red": {
     "nodes": {
@@ -12,9 +12,12 @@
     "url": "https://github.com/Miakapp/node-red-contrib-MiakAPI"
   },
   "keywords": [
+    "node-red",
     "Miakapp",
     "MiakAPI",
-    "Node-RED"
+    "home",
+    "smart-home",
+    "home-automation"
   ],
   "author": "Mathieu Colmon",
   "license": "ISC",

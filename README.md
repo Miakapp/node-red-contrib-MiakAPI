@@ -42,7 +42,7 @@ __Code:__
   <div class="block small">
     <div class="title">Big grid example</div>
 
-    <div class="bigGrid odd">
+    <div class="bigGrid">
       <div id="btn1" class="bigBtn" @click>
         <div class="bigBtnIcon">🔷</div>
         <div class="bigBtnText">Normal button</div>

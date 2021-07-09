@@ -1,6 +1,6 @@
 <!-- Init -->
 <script type="text/javascript">
-  RED.nodes.registerType('init', {
+  RED.nodes.registerType('initMiakapi', {
     category: 'Miakapp',
     color: '#3ea842',
     icon: 'miakapp.png',
@@ -15,7 +15,7 @@
   });
 </script>
 
-<script type="text/html" data-template-name="init">
+<script type="text/html" data-template-name="initMiakapi">
   <div class="form-row">
     <label for="node-input-home"><i class="fa fa-home"></i> Home</label>
     <input type="text" id="node-input-home" placeholder="Home ID">
@@ -30,13 +30,13 @@
   </div>
 </script>
 
-<script type="text/html" data-help-name="init">
+<script type="text/html" data-help-name="initMiakapi">
   <p>Init a coordinator to interact with your Miakapp home</p>
 </script>
 
 <!-- Get users -->
 <script type="text/javascript">
-  RED.nodes.registerType('getUsers', {
+  RED.nodes.registerType('getHomeUsers', {
     category: 'Miakapp',
     color: '#3ea842',
     icon: 'miakapp.png',
@@ -52,20 +52,20 @@
   });
 </script>
 
-<script type="text/html" data-template-name="getUsers">
+<script type="text/html" data-template-name="getHomeUsers">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
 </script>
 
-<script type="text/html" data-help-name="getUsers">
+<script type="text/html" data-help-name="getHomeUsers">
   <p>Get list of all Miakapp users in your home</p>
 </script>
 
-<!-- Commit -->
+<!-- Commit variables -->
 <script type="text/javascript">
-  RED.nodes.registerType('commit', {
+  RED.nodes.registerType('commitVariables', {
     category: 'Miakapp',
     color: '#3ea842',
     icon: 'miakapp.png',
@@ -134,7 +134,7 @@
   });
 </script>
 
-<script type="text/html" data-template-name="commit">
+<script type="text/html" data-template-name="commitVariables">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
@@ -142,13 +142,13 @@
   <ol id="varList"></ol>
 </script>
 
-<script type="text/html" data-help-name="commit">
+<script type="text/html" data-help-name="commitVariables">
   <p>Commit variables to Miakapp</p>
 </script>
 
 <!-- On home update -->
 <script type="text/javascript">
-  RED.nodes.registerType('onUpdate', {
+  RED.nodes.registerType('onHomeUpdate', {
     category: 'Miakapp',
     color: '#3ea842',
     icon: 'miakapp.png',
@@ -163,14 +163,14 @@
   });
 </script>
 
-<script type="text/html" data-template-name="onUpdate">
+<script type="text/html" data-template-name="onHomeUpdate">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
 </script>
 
-<script type="text/html" data-help-name="onUpdate">
+<script type="text/html" data-help-name="onHomeUpdate">
   <p>Handles when the home is updated</p>
 </script>
 
@@ -270,7 +270,7 @@
 
 <!-- Send notification -->
 <script type="text/javascript">
-  RED.nodes.registerType('sendNotif', {
+  RED.nodes.registerType('sendPushNotif', {
     category: 'Miakapp',
     color: '#3ea842',
     icon: 'miakapp.png',
@@ -306,7 +306,7 @@
   });
 </script>
 
-<script type="text/html" data-template-name="sendNotif">
+<script type="text/html" data-template-name="sendPushNotif">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
@@ -341,13 +341,13 @@
   </div>
 </script>
 
-<script type="text/html" data-help-name="sendNotif">
+<script type="text/html" data-help-name="sendPushNotif">
   <p>Send a push notification to each user who meets the criteria</p>
 </script>
 
-<!-- Reconnect -->
+<!-- Reconnect MiakAPI -->
 <script type="text/javascript">
-  RED.nodes.registerType('reconnect', {
+  RED.nodes.registerType('reconnectMiakapi', {
     category: 'Miakapp',
     color: '#3ea842',
     icon: 'miakapp.png',
@@ -362,13 +362,13 @@
   });
 </script>
 
-<script type="text/html" data-template-name="reconnect">
+<script type="text/html" data-template-name="reconnectMiakapi">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
 </script>
 
-<script type="text/html" data-help-name="getUsers">
+<script type="text/html" data-help-name="reconnectMiakapi">
   <p>Disconnect and reconnect to MiakAPI server</p>
 </script>

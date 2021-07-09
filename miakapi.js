@@ -16,7 +16,7 @@ const handlers = {
 
 module.exports = (RED) => {
   // Init
-  RED.nodes.registerType('init', function(config) {
+  RED.nodes.registerType('initMiakapi', function(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
@@ -45,7 +45,7 @@ module.exports = (RED) => {
   });
 
   // Get users
-  RED.nodes.registerType('getUsers', function(config) {
+  RED.nodes.registerType('getHomeUsers', function(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
@@ -57,8 +57,8 @@ module.exports = (RED) => {
     });
   });
 
-  // Commit
-  RED.nodes.registerType('commit', function(config) {
+  // Commit variables
+  RED.nodes.registerType('commitVariables', function(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
@@ -99,7 +99,7 @@ module.exports = (RED) => {
   });
 
   // On update
-  RED.nodes.registerType('onUpdate', function(config) {
+  RED.nodes.registerType('onHomeUpdate', function(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
@@ -158,7 +158,7 @@ module.exports = (RED) => {
   });
 
     // Send notification
-    RED.nodes.registerType('sendNotif', function(config) {
+    RED.nodes.registerType('sendPushNotif', function(config) {
       RED.nodes.createNode(this, config);
       const node = this;
 
@@ -197,8 +197,8 @@ module.exports = (RED) => {
       });
     });
 
-  // Reconnect
-  RED.nodes.registerType('reconnect', function(config) {
+  // Reconnect miakapi
+  RED.nodes.registerType('reconnectMiakapi', function(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 

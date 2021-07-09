@@ -78,7 +78,7 @@ module.exports = (RED) => {
         const { type, value } = config.values[path];
 
         if (type === 'jsonata') {
-          variables[path] = jsonata(value).evaluate(contexts);
+          variables[path] = jsonata(value || '""').evaluate(contexts) || '';
           return;
         }
 
@@ -162,13 +162,13 @@ module.exports = (RED) => {
       RED.nodes.createNode(this, config);
       const node = this;
 
-      const globalContext = {}
-      node.context().global.keys().forEach((k) => globalContext[k] = node.context().global.get(k));
-      const flowContext = {}
-      node.context().flow.keys().forEach((k) => flowContext[k] = node.context().flow.get(k));
-
       node.on('input', (msg) => {
         if (HOME) {
+          const globalContext = {}
+          node.context().global.keys().forEach((k) => globalContext[k] = node.context().global.get(k));
+          const flowContext = {}
+          node.context().flow.keys().forEach((k) => flowContext[k] = node.context().flow.get(k));
+
           const contexts = {
             msg,
             flow: flowContext,

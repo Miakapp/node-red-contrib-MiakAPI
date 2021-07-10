@@ -28,7 +28,7 @@ Events are:
 
 ## Interface builder examples
 Interface editor is a web HTML/CSS editor with snippets.
-Here is an example of what we can build very fast.
+Here is an example of what we can build very quickly and without writing CSS.
 
 __Screenshots:__
 

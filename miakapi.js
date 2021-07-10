@@ -98,6 +98,21 @@ module.exports = (RED) => {
     });
   });
 
+  // On ready
+  RED.nodes.registerType('onHomeReady', function(config) {
+    RED.nodes.createNode(this, config);
+    const node = this;
+
+    handlers.ready.push(() => {
+      node.send({ users: HOME.users });
+      node.status({
+        fill: 'green',
+        shape: 'dot',
+        text: `Ready !`,
+      });
+    });
+  });
+
   // On update
   RED.nodes.registerType('onHomeUpdate', function(config) {
     RED.nodes.createNode(this, config);
@@ -181,8 +196,6 @@ module.exports = (RED) => {
             image: jsonata(config.image || '""').evaluate(contexts) || '',
             tag: config.tag || '',
           };
-
-          console.log('notif', notif);
 
           const users = HOME.users.filter((u) => (
             u.notifications

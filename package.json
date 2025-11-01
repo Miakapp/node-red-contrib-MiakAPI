@@ -23,6 +23,6 @@
   "license": "ISC",
   "dependencies": {
     "jsonata": "^1.8.4",
-    "miakapi": "^3.0.3-DEV"
+    "miakapi": "^3.0.31"
   }
 }

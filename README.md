@@ -1,8 +1,9 @@
 # MiakAPI for Node-RED
 
-> **Retired with Miakapp 3.** Miakapp 4 has no Node-RED module: an agent builds
-> each home's coordinator with the `miakapi` SDK and the `@miakapp/cli`
-> (https://github.com/Miakapp/MiakAPI). See https://www.miakapp.com.
+> **New: [Miakapp 4](https://www.miakapp.com), the smart home that builds itself.**
+> Tell an AI agent what you want: it connects your devices (even the closed ones),
+> writes your automations and builds an app for everyone at home.
+> Get started at https://www.miakapp.com.
 
 ```
 npm i node-red-contrib-miakapi

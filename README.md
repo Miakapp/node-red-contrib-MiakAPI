@@ -1,5 +1,9 @@
 # MiakAPI for Node-RED
 
+> **Retired with Miakapp 3.** Miakapp 4 has no Node-RED module: an agent builds
+> each home's coordinator with the `miakapi` SDK and the `@miakapp/cli`
+> (https://github.com/Miakapp/MiakAPI). See https://www.miakapp.com.
+
 ```
 npm i node-red-contrib-miakapi
 ```
